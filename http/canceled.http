@@ -1,0 +1,34 @@
+GET http://localhost:8080/transactions
+
+###
+POST http://localhost:8080/transactions
+Content-Type: application/json
+
+{
+  "totalAmount": 238,
+  "paymentType": "PAYPAL",
+  "paymentStatus": "NEW",
+  "items": [
+    {
+      "name": "bike",
+      "price": 208,
+      "quantity": 1
+    },
+    {
+      "name": "shoes",
+      "price": 30,
+      "quantity": 1
+    }
+  ]
+}
+
+###
+PATCH http://localhost:8080/transactions/2
+Content-Type: application/json
+
+{
+  "paymentStatus": "CANCELED"
+}
+
+###
+GET http://localhost:8080/transactions/2

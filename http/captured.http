@@ -1,0 +1,37 @@
+GET http://localhost:8080/transactions
+
+### post a payment
+POST http://localhost:8080/transactions
+Content-Type: application/json
+
+{
+  "totalAmount": 99.95,
+  "paymentType": "CREDIT_CARD",
+  "paymentStatus": "NEW",
+  "items": [
+    {
+      "name": "t-shirt",
+      "price": 19.99,
+      "quantity": 5
+    }
+  ]
+}
+
+### get the payment
+GET http://localhost:8080/transactions/1
+
+### set payement to authorized
+PATCH http://localhost:8080/transactions/1
+Content-Type: application/json
+
+{
+  "paymentStatus": "AUTHORIZED"
+}
+
+### set payement to captured
+PATCH http://localhost:8080/transactions/1
+Content-Type: application/json
+
+{
+  "paymentStatus": "CAPTURED"
+}
