@@ -22,8 +22,12 @@ Content-Type: application/json
   ]
 }
 
+> {%
+    client.global.set("payment_id", response.body.id);
+%}
+
 ###
-PATCH http://localhost:8080/transactions/2
+PATCH http://localhost:8080/transactions/{{payment_id}}
 Content-Type: application/json
 
 {
@@ -31,4 +35,4 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8080/transactions/2
+GET http://localhost:8080/transactions/{{payment_id}}

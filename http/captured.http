@@ -17,11 +17,15 @@ Content-Type: application/json
   ]
 }
 
+> {%
+    client.global.set("payment_id", response.body.id);
+%}
+
 ### get the payment
-GET http://localhost:8080/transactions/1
+GET http://localhost:8080/transactions/{{payment_id}}
 
 ### set payement to authorized
-PATCH http://localhost:8080/transactions/1
+PATCH http://localhost:8080/transactions/{{payment_id}}
 Content-Type: application/json
 
 {
@@ -29,7 +33,7 @@ Content-Type: application/json
 }
 
 ### set payement to captured
-PATCH http://localhost:8080/transactions/1
+PATCH http://localhost:8080/transactions/{{payment_id}}
 Content-Type: application/json
 
 {

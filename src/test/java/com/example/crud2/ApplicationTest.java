@@ -135,4 +135,40 @@ public class ApplicationTest {
                 result.getResponseBody().getPaymentStatus(),
                 Matchers.is(PaymentStatus.CANCELED));
     }
+
+    @Test
+    void capturedBadRequest() {
+        String uri = "/transactions/" + ++request;
+        client.post().uri("/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue("""
+                        {
+                          "totalAmount": 99.95,
+                          "paymentType": "CREDIT_CARD",
+                          "paymentStatus": "NEW",
+                          "items": [
+                            {
+                              "name": "t-shirt",
+                              "price": 19.99,
+                              "quantity": 5
+                            }
+                          ]
+                        }
+                        """)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectHeader().location("http://localhost" + uri);
+
+        client.patch().uri(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue("""
+                            {
+                               "paymentStatus": "CAPTURED"
+                            }
+                        """)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+    }
+
 }

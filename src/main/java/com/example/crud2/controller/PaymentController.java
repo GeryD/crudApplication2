@@ -43,5 +43,15 @@ public class PaymentController {
     public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id) {
         return new ResponseEntity<>(paymentService.getTransactionById(id), HttpStatus.OK);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleNoSuchElementFoundException(
+            IllegalArgumentException exception
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
 }
 

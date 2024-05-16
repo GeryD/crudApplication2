@@ -58,8 +58,8 @@ public class PaymentService {
 
         // It is only possible to change the transaction status to `CAPTURED`
         // when the transaction is currently in status `AUTHORIZED`
-        if (existingTransaction.getPaymentStatus() == PaymentStatus.AUTHORIZED
-                && updatedTransaction.getPaymentStatus() != PaymentStatus.CAPTURED) {
+        if (existingTransaction.getPaymentStatus() != PaymentStatus.AUTHORIZED
+                && updatedTransaction.getPaymentStatus() == PaymentStatus.CAPTURED) {
             throw new IllegalArgumentException("Cannot update the status to CAPTURED, transaction is not AUTHORIZED.");
         }
 

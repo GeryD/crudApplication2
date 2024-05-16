@@ -116,17 +116,32 @@ class PaymentServiceTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {"AUTHORIZED", "NEW", "CANCELED"})
-    void updateAuthorizedTransaction(PaymentStatus status) {
+    @EnumSource(names = {"CAPTURED", "NEW", "CANCELED"})
+    void updateToCapturedTransactionError(PaymentStatus status) {
         Long id = 1L;
-        Transaction existingTransaction = getExistingTransaction(id, "2.00", PaymentType.PAYPAL, PaymentStatus.AUTHORIZED);
+        Transaction existingTransaction = getExistingTransaction(id, "2.00", PaymentType.PAYPAL, status);
 
         when(transactionRepository.findById(id)).thenReturn(Optional.of(existingTransaction));
 
-        Transaction updatedTransaction = getUpdatedTransaction(status);
+        Transaction updatedTransaction = getUpdatedTransaction(PaymentStatus.CAPTURED);
 
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> paymentService.updateTransaction(id, updatedTransaction));
+    }
+
+    @Test
+    void updateToCapturedTransaction() {
+        Long id = 1L;
+        Transaction existingTransaction = getExistingTransaction(id, "2.00", PaymentType.PAYPAL, PaymentStatus.AUTHORIZED);
+        when(transactionRepository.findById(id)).thenReturn(Optional.of(existingTransaction));
+        when(transactionRepository.save(any(Transaction.class)))
+                .thenAnswer(i -> i.getArgument(0));
+
+        Transaction updatedTransaction = getUpdatedTransaction(PaymentStatus.CAPTURED);
+
+        Transaction actualTransaction = paymentService.updateTransaction(id, updatedTransaction);
+
+        assertThat(actualTransaction.getPaymentStatus(), is(PaymentStatus.CAPTURED));
     }
 
     @Test
